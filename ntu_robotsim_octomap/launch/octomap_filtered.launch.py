@@ -16,7 +16,7 @@ def generate_launch_description():
             'frame_id': 'odom',
 
             # Robot base frame (must exist in TF)
-            'base_frame': 'base_link',
+            'base_frame_id': 'base_link',
 
             # Ground filtering parameters
             'filter_ground': True,
