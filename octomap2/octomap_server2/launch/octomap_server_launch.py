@@ -9,7 +9,7 @@ from launch.actions import DeclareLaunchArgument
 def generate_launch_description():
     return LaunchDescription([
         DeclareLaunchArgument('input_cloud_topic', default_value='/rgbd_camera/points'),
-        DeclareLaunchArgument('resolution', default_value='0.10'),
+        DeclareLaunchArgument('resolution', default_value='0.05'),
         DeclareLaunchArgument('frame_id', default_value='odom'),
         DeclareLaunchArgument('base_frame_id', default_value='base_link'),
         DeclareLaunchArgument('height_map', default_value='True'),
