@@ -84,7 +84,7 @@ planner_server:
     GridBased:
       plugin: "nav2_navfn_planner/NavfnPlanner"
       tolerance: 0.5
-      allow_unknown: true
+      allow_unknown: false
 
 global_costmap:
   global_costmap:
@@ -99,7 +99,7 @@ global_costmap:
 
       static_layer:
         plugin: "nav2_costmap_2d::StaticLayer"
-        map_topic: /projected_map
+        map_topic: projected_map
         map_subscribe_transient_local: False
 
       inflation_layer:
@@ -134,8 +134,10 @@ local_costmap:
         observation_sources: pointcloud
 
         pointcloud:
-          topic: /velodyne_points
+          topic: /rgbd_camera/points
           data_type: "PointCloud2"
+          min_obstacle_height: 0.1
+          max_obstacle_height: 2.0
           clearing: True
           marking: True
 

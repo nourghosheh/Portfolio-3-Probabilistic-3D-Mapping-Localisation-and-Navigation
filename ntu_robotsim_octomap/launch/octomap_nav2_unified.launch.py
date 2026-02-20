@@ -1,14 +1,20 @@
 from launch import LaunchDescription
-from launch.actions import IncludeLaunchDescription
+from launch.actions import IncludeLaunchDescription, DeclareLaunchArgument
 from launch.launch_description_sources import PythonLaunchDescriptionSource
 from launch_ros.actions import Node
-from launch.substitutions import PathJoinSubstitution
+from launch.substitutions import PathJoinSubstitution, LaunchConfiguration
 from launch_ros.substitutions import FindPackageShare
 
 
 def generate_launch_description():
 
     pkg_share = FindPackageShare('ntu_robotsim_octomap')
+
+    resolution_arg = DeclareLaunchArgument(
+        'resolution',
+        default_value='0.05',
+        description='OctoMap resolution in meters'
+    )
 
     maze = IncludeLaunchDescription(
         PythonLaunchDescriptionSource(
@@ -25,6 +31,17 @@ def generate_launch_description():
     octomap = IncludeLaunchDescription(
         PythonLaunchDescriptionSource(
             PathJoinSubstitution([pkg_share, 'launch', 'octomap_filtered.launch.py'])
+        ),
+        launch_arguments={'resolution': LaunchConfiguration('resolution')}.items()
+    )
+
+    odom_tf = IncludeLaunchDescription(
+        PythonLaunchDescriptionSource(
+            PathJoinSubstitution([
+                FindPackageShare('odom_to_tf_ros2'),
+                'launch',
+                'odom_to_tf.launch.py'
+            ])
         )
     )
 
@@ -54,10 +71,32 @@ def generate_launch_description():
         }.items()
     )
 
+    rviz = IncludeLaunchDescription(
+        PythonLaunchDescriptionSource(
+            PathJoinSubstitution([
+                FindPackageShare('nav2_bringup'),
+                'launch',
+                'rviz_launch.py'
+            ])
+        ),
+        launch_arguments={
+            'use_sim_time': 'True',
+            'autostart': 'True',
+            'rviz_config': PathJoinSubstitution([
+                pkg_share,
+                'config',
+                'octomap_3d.rviz'
+            ])
+        }.items()
+    )
+
     return LaunchDescription([
+        resolution_arg,
         maze,
         robot,
         octomap,
+        odom_tf,
         tf_map_odom,
-        nav2
+        nav2,
+        rviz
     ])

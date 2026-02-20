@@ -26,7 +26,7 @@ def generate_launch_description():
             executable='static_transform_publisher',
             name='static_transform_publisher',
             arguments=[
-                '0', '0', '0',  # Translation: x y z
+                '0.1', '0', '0.19',  # Translation: x y z
                 '0', '0', '0', '1',  # Rotation: qx qy qz qw
                 'base_link',  # Parent frame
                 'realsense'  # Child frame
